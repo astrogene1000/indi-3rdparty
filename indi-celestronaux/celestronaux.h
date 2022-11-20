@@ -240,6 +240,7 @@ class CelestronAUX :
         /// Guiding
         /////////////////////////////////////////////////////////////////////////////////////
         bool guidePulse(INDI_EQ_AXIS axis, uint32_t ms, int8_t rate);
+        bool isGuideActive(INDI_EQ_AXIS axis); // ESN 11192022
 
 
     private:

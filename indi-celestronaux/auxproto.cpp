@@ -249,6 +249,10 @@ const char * AUXCommand::commandName(AUXCommands command) const
                 return "MC_GET_CORDWRAP_POS";
             case GET_VER:
                 return "GET_VER";
+	    case MC_AUX_GUIDE: // ESN 11/19/2022
+		return "MC_AUX_GUIDE";
+	    case MC_AUX_GUIDE_ACTIVE: // ESN 11/19/2022
+		return "MC_AUX_GUIDE_ACTIVE";
             default :
                 return nullptr;
         }
@@ -292,8 +296,8 @@ int AUXCommand::responseDataSize()
             case MC_SEEK_DONE:
             case MC_LEVEL_DONE:
             case MC_POLL_CORDWRAP:
-            case MC_AUX_GUIDE:
-            case MC_AUX_GUIDE_ACTIVE:
+	    case MC_AUX_GUIDE: // ESN 11192022
+	    case MC_AUX_GUIDE_ACTIVE: // ESN 11192022
                 return 1;
             case MC_GOTO_FAST:
             case MC_SET_POSITION:

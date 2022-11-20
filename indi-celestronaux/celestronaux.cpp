@@ -999,7 +999,13 @@ bool CelestronAUX::guidePulse(INDI_EQ_AXIS axis, uint32_t ms, int8_t rate)
         data[0] = rate;
         data[1] = ticks;
         AUXCommand cmd(MC_AUX_GUIDE, APP, axis == AXIS_DE ? ALT : AZM, data);
-        return sendAUXCommand(cmd);
+//ESN 11192022        return sendAUXCommand(cmd);
+        sendAUXCommand(cmd);
+//ESN 11/19/2020
+        readAUXResponse(cmd);
+	return true;
+// END ESN
+
     }
     // For Alt-Az mounts in tracking state, add to guide delta
     else if (TrackState == SCOPE_TRACKING)
@@ -1573,6 +1579,19 @@ void CelestronAUX::TimerHit()
                 break;
             }
     }
+/* ESN 11192022 */
+    if (MountTypeSP[EQUATORIAL].getState() == ISS_ON)
+	{
+//	    if (GuideWENP.s == IPS_BUSY)
+    	    {
+		isGuideActive(AXIS_RA);
+	    }
+//	    if (GuideNSNP.s == IPS_BUSY)
+	    {
+		isGuideActive(AXIS_DE);
+	    }
+	}
+/* ESN OFF 11192022 */
 
     // Check if seeking index or leveling is done
     if (HomeSP.getState() == IPS_BUSY)
@@ -2904,4 +2923,32 @@ void CelestronAUX::hex_dump(char *buf, AUXBuffer data, size_t size)
     if (size > 0)
         buf[3 * size - 1] = '\0';
 }
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+///
+/////////////////////////////////////////////////////////////////////////////////////
+/* ESN 11192022 */
+bool CelestronAUX::isGuideActive(INDI_EQ_AXIS axis) {
+        AUXBuffer data(2);
+//        data[0] = 0;
+//        data[1] = 0;
+//        AUXCommand cmd(MC_AUX_GUIDE_ACTIVE, APP, axis == AXIS_DE ? ALT : AZM, data);
+        AUXCommand cmd(MC_AUX_GUIDE_ACTIVE, APP, axis == AXIS_DE ? ALT : AZM);
+//ESN 11192022        return sendAUXCommand(cmd);
+        sendAUXCommand(cmd);
+//ESN 11/19/2020
+        readAUXResponse(cmd);
+        return true;
+// END ESN
+
+    }
+/* ESN OFF 11192022 */
+
+
+
+
+
+
+
 
