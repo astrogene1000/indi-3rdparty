@@ -32,7 +32,7 @@
 #include <sys/ioctl.h>
 #include <thread>
 #include <chrono>
-
+#include <cstring>
 #include <alignment/DriverCommon.h>
 #include "celestronaux.h"
 #include "config.h"
@@ -461,6 +461,16 @@ bool CelestronAUX::updateProperties()
             SetAxis1ParkDefault(0);
             SetAxis2ParkDefault(0);
         }
+
+	char version[8];
+	sprintf(version,"%d.%d", m_AzimuthVersion[0],m_AzimuthVersion[1]);
+	if(atof(version) < 6.12) 
+	{
+		LOGF_INFO("GUIDE not supported on MC version %s", version);	
+	        deleteProperty(GuideNSNP.name);
+	        deleteProperty(GuideWENP.name);
+	        deleteProperty(GuideRateNP.getName());
+	}
     }
     else
     {
@@ -1582,11 +1592,11 @@ void CelestronAUX::TimerHit()
 /* ESN 11192022 */
     if (MountTypeSP[EQUATORIAL].getState() == ISS_ON)
 	{
-//	    if (GuideWENP.s == IPS_BUSY)
+	    if (GuideWENP.s == IPS_BUSY)
     	    {
 		isGuideActive(AXIS_RA);
 	    }
-//	    if (GuideNSNP.s == IPS_BUSY)
+	    if (GuideNSNP.s == IPS_BUSY)
 	    {
 		isGuideActive(AXIS_DE);
 	    }
@@ -2944,11 +2954,3 @@ bool CelestronAUX::isGuideActive(INDI_EQ_AXIS axis) {
 
     }
 /* ESN OFF 11192022 */
-
-
-
-
-
-
-
-
